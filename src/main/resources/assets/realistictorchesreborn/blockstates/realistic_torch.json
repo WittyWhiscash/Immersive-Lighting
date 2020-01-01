@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "islit=true": { "model": "realistictorchesreborn:block/realistic_torch_lit" },
+        "islit=false": { "model": "realistictorchesreborn:block/realistic_torch_unlit"}
+    }
+}
