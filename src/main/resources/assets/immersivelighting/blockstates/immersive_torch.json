@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "islit=true": { "model": "immersivelighting:block/immersive_torch_lit" },
+        "islit=false": { "model": "immersivelighting:block/immersive_torch_unlit"}
+    }
+}

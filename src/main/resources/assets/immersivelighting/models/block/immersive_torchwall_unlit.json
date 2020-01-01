@@ -1,6 +1,6 @@
 {
     "parent": "block/torch_wall",
     "textures": {
-        "torch": "realistictorchesreborn:block/torch_unlit"
+        "torch": "immersivelighting:block/torch_unlit"
     }
 }

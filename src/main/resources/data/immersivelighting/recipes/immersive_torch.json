@@ -1,24 +1,24 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "X",
-    "#"
+    "C",
+    "S"
   ],
   "key": {
-    "#": {
-      "item": "minecraft:stick"
-    },
-    "X": [
+    "C": [
       {
         "item": "minecraft:coal"
       },
       {
         "item": "minecraft:charcoal"
       }
-    ]
+    ],
+    "S": {
+      "item": "minecraft:stick"
+    }
   },
   "result": {
-    "item": "realistictorchesreborn:realistic_torch",
+    "item": "immersivelighting:immersive_torch",
     "count": 4
   }
 }

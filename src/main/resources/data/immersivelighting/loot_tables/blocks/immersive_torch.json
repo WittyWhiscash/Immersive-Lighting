@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "realistictorchesreborn:realistic_torch"
+          "name": "immersivelighting:immersive_torch"
         }
       ],
       "conditions": [

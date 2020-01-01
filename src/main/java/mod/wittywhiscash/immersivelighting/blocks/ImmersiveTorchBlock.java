@@ -1,7 +1,7 @@
-package mod.wittywhiscash.realistictorchesreborn.blocks;
+package mod.wittywhiscash.immersivelighting.blocks;
 
-import mod.wittywhiscash.realistictorchesreborn.Config;
-import mod.wittywhiscash.realistictorchesreborn.RealisticTorchesReborn;
+import mod.wittywhiscash.immersivelighting.Config;
+import mod.wittywhiscash.immersivelighting.ImmersiveLighting;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -22,14 +22,14 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-public class RealisticTorchBlock extends TorchBlock {
+public class ImmersiveTorchBlock extends TorchBlock {
 
     private static int secondCounter = 60;
     private static int minuteCounter = Config.TORCH_TIMEUNTILBURNOUT.get();
     private static final IntegerProperty AGE = IntegerProperty.create("age", 0, minuteCounter);
     private static final BooleanProperty ISLIT = BooleanProperty.create("islit");
 
-    public RealisticTorchBlock() {
+    public ImmersiveTorchBlock() {
         super(Block.Properties.from(Blocks.TORCH));
         this.setDefaultState(this.getDefaultState().with(ISLIT, false).with(AGE, 0));
     }
@@ -105,7 +105,7 @@ public class RealisticTorchBlock extends TorchBlock {
                 world.notifyNeighbors(pos, this);
                 return;
             }
-            RealisticTorchesReborn.LOGGER.debug("Torch Block at " + pos.getX() + " " + pos.getZ() + " is updating");
+            ImmersiveLighting.LOGGER.debug("Torch Block at " + pos.getX() + " " + pos.getZ() + " is updating");
             world.setBlockState(pos, state.with(AGE, newAge));
             world.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(world));
             secondCounter = 60;
