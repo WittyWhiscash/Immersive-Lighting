@@ -19,11 +19,16 @@ public class Config {
 
     public static ForgeConfigSpec.IntValue TORCH_TIMEUNTILBURNOUT;
 
+    public static ForgeConfigSpec.BooleanValue DEBUG_SHOWDEBUG;
+
     static {
         COMMON_BUILDER.comment("General Settings").push(CATEGORY_GENERAL);
 
         TORCH_TIMEUNTILBURNOUT = COMMON_BUILDER.comment("The time, in minutes, it takes for the torch to burn out.")
-                .defineInRange("burnoutTime", 60, 1, 1440);
+                .defineInRange("torch_burnoutTime", 60, 1, 1440);
+
+        DEBUG_SHOWDEBUG = COMMON_BUILDER.comment("If set to true, will show what torches are updating and where they are in the world in the log. Will send lots of logging entries to the console.")
+                .define("debug_showDebug", false);
 
         COMMON_BUILDER.pop();
 

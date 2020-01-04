@@ -105,7 +105,9 @@ public class ImmersiveWallTorchBlock extends WallTorchBlock {
                 world.notifyNeighbors(pos, this);
                 return;
             }
-            ImmersiveLighting.LOGGER.debug("Torch Block at " + pos.getX() + " " + pos.getZ() + " is updating");
+            if (Config.DEBUG_SHOWDEBUG.get()) {
+                ImmersiveLighting.LOGGER.debug("Torch Block at " + pos.getX() + " " + pos.getZ() + " is updating");
+            }
             world.setBlockState(pos, state.with(AGE, newAge));
             world.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(world));
             secondCounter = 60;
