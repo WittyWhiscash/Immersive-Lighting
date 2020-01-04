@@ -34,6 +34,18 @@ public class ImmersiveWallTorchBlock extends WallTorchBlock {
         this.setDefaultState(this.getDefaultState().with(ISLIT, false).with(AGE, 0));
     }
 
+    public static IntegerProperty getAge() {
+        return AGE;
+    }
+
+    public static BooleanProperty getIslit() {
+        return ISLIT;
+    }
+
+    public static int getMinuteCounter() {
+        return minuteCounter;
+    }
+
     // Set the light value to 14 when it is lit. Otherwise, it emits no light.
     @Override
     public int getLightValue(BlockState state) {
