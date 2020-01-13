@@ -81,8 +81,7 @@ public class ImmersiveWallTorchBlock extends WallTorchBlock {
                 playExtinguishSound(world, pos);
             }
             else {
-                world.setBlockState(pos, ModBlocks.WALL_TORCH.getDefaultState().with(ISLIT, true).with(AGE, minuteCounter).with(HORIZONTAL_FACING, state.get(HORIZONTAL_FACING)));
-                world.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(world));
+                changeBlockStateToLit(world, pos, state);
             }
             return true;
         }
@@ -112,8 +111,7 @@ public class ImmersiveWallTorchBlock extends WallTorchBlock {
             }
             if (newAge == 0) {
                 playExtinguishSound(world, pos);
-                world.setBlockState(pos, ModBlocks.TORCH.getDefaultState());
-                world.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(world));
+                changeBlockStateToUnlit(world, pos, state);
                 world.notifyNeighbors(pos, this);
                 return;
             }
@@ -138,11 +136,20 @@ public class ImmersiveWallTorchBlock extends WallTorchBlock {
         // Check if we are raining and we are lit. If so, put out the torch.
         if (world.isRainingAt(pos) && state.get(ISLIT)) {
             playExtinguishSound(world, pos);
-            world.setBlockState(pos, ModBlocks.WALL_TORCH.getDefaultState().with(HORIZONTAL_FACING, state.get(HORIZONTAL_FACING)));
-            world.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(world));
+            changeBlockStateToUnlit(world, pos, state);
             return true;
         }
         else return false;
+    }
+
+    public void changeBlockStateToLit(World world, BlockPos pos, BlockState state) {
+        world.setBlockState(pos, ModBlocks.WALL_TORCH.getDefaultState().with(ISLIT, true).with(AGE, minuteCounter).with(HORIZONTAL_FACING, state.get(HORIZONTAL_FACING)));
+        world.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(world));
+    }
+
+    public void changeBlockStateToUnlit(World world, BlockPos pos, BlockState state) {
+        world.setBlockState(pos, ModBlocks.WALL_TORCH.getDefaultState().with(HORIZONTAL_FACING, state.get(HORIZONTAL_FACING)));
+        world.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(world));
     }
 
     public void playLightingSound(World world, BlockPos pos) {

@@ -81,8 +81,7 @@ public class ImmersiveTorchBlock extends TorchBlock {
                 playExtinguishSound(world, pos);
             }
             if (!world.isRainingAt(pos)) {
-                world.setBlockState(pos, ModBlocks.TORCH.getDefaultState().with(ISLIT, true).with(AGE, minuteCounter));
-                world.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(world));
+                changeBlockStateToLit(world, pos);
             }
             return true;
         }
@@ -112,8 +111,7 @@ public class ImmersiveTorchBlock extends TorchBlock {
             }
             if (newAge == 0) {
                 playExtinguishSound(world, pos);
-                world.setBlockState(pos, ModBlocks.TORCH.getDefaultState());
-                world.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(world));
+                changeBlockStateToUnlit(world, pos);
                 world.notifyNeighbors(pos, this);
                 return;
             }
@@ -138,11 +136,20 @@ public class ImmersiveTorchBlock extends TorchBlock {
         // Check if we are raining and we are lit. If so, put out the torch.
         if (world.isRainingAt(pos) && state.get(ISLIT)) {
             playExtinguishSound(world, pos);
-            world.setBlockState(pos, ModBlocks.TORCH.getDefaultState());
-            world.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(world));
+            changeBlockStateToUnlit(world, pos);
             return true;
         }
         else return false;
+    }
+
+    public void changeBlockStateToLit(World world, BlockPos pos) {
+        world.setBlockState(pos, ModBlocks.TORCH.getDefaultState().with(ISLIT, true).with(AGE, minuteCounter));
+        world.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(world));
+    }
+
+    public void changeBlockStateToUnlit(World world, BlockPos pos) {
+        world.setBlockState(pos, ModBlocks.TORCH.getDefaultState());
+        world.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(world));
     }
 
     public void playLightingSound(World world, BlockPos pos) {
