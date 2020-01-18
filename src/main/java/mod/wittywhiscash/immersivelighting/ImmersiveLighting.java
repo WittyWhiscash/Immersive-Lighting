@@ -1,6 +1,9 @@
 package mod.wittywhiscash.immersivelighting;
 
+import mod.wittywhiscash.immersivelighting.blocks.ModBlocks;
 import mod.wittywhiscash.immersivelighting.worldgen.TorchFeature;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
@@ -13,6 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -39,6 +43,7 @@ public class ImmersiveLighting
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
 
         Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve("immersivelighting-client.toml"));
         Config.loadConfig(Config.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve("immersivelighting-common.toml"));
@@ -49,7 +54,11 @@ public class ImmersiveLighting
 
     private void setup(final FMLCommonSetupEvent event)
     {
-        ConfiguredFeature<?> torchFeature = Biome.createDecoratedFeature(new TorchFeature(NoFeatureConfig::deserialize), IFeatureConfig.NO_FEATURE_CONFIG, Placement.NOPE , IPlacementConfig.NO_PLACEMENT_CONFIG);
-        ForgeRegistries.BIOMES.forEach(biome -> biome.addFeature(GenerationStage.Decoration.TOP_LAYER_MODIFICATION, torchFeature));
+        ForgeRegistries.BIOMES.forEach(biome -> biome.addFeature(GenerationStage.Decoration.TOP_LAYER_MODIFICATION, new TorchFeature(NoFeatureConfig::deserialize).func_225566_b_(IFeatureConfig.NO_FEATURE_CONFIG).func_227228_a_(Placement.NOPE.func_227446_a_(IPlacementConfig.NO_PLACEMENT_CONFIG))));
+    }
+
+    private void clientSetup(final FMLClientSetupEvent event) {
+        RenderTypeLookup.setRenderLayer(ModBlocks.TORCH, RenderType.func_228643_e_());
+        RenderTypeLookup.setRenderLayer(ModBlocks.WALL_TORCH, RenderType.func_228643_e_());
     }
 }

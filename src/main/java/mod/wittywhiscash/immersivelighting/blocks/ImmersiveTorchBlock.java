@@ -2,23 +2,25 @@ package mod.wittywhiscash.immersivelighting.blocks;
 
 import mod.wittywhiscash.immersivelighting.Config;
 import mod.wittywhiscash.immersivelighting.ImmersiveLighting;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.TorchBlock;
+import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import java.util.Random;
 
@@ -67,7 +69,7 @@ public class ImmersiveTorchBlock extends TorchBlock {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType func_225533_a_(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         // Check if the block was right clicked with a flint and steel. If so, change the state to a lit torch, and damage the flint and steel.
         if (player.getHeldItem(hand).getItem() == Items.FLINT_AND_STEEL) {
             playLightingSound(world, pos);
@@ -83,9 +85,9 @@ public class ImmersiveTorchBlock extends TorchBlock {
             if (!world.isRainingAt(pos)) {
                 changeBlockStateToLit(world, pos);
             }
-            return true;
+            return ActionResultType.SUCCESS;
         }
-        return super.onBlockActivated(state, world, pos, player, hand, hit);
+        return super.func_225533_a_(state, world, pos, player, hand, hit);
     }
 
     @Override
@@ -94,7 +96,7 @@ public class ImmersiveTorchBlock extends TorchBlock {
     }
 
     @Override
-    public void tick(BlockState state, World world, BlockPos pos, Random random) {
+    public void func_225534_a_(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         if (!world.isRemote()) {
             boolean isTorchNotValid = checkTorchIsValid(state, world, pos);
             if (!state.get(ISLIT) || isTorchNotValid) {
