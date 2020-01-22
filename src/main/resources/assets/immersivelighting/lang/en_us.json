@@ -1,3 +1,6 @@
 {
-  "block.immersivelighting.immersive_torch": "Torch"
+  "block.immersivelighting.immersive_torch": "Torch",
+
+  "item.immersivelighting.tinder": "Tinder",
+  "item.immersivelighting.flint_and_tinder": "Flint and Tinder"
 }
