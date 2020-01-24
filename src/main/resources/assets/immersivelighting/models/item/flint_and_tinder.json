@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "immersivelighting:item/flint_and_tinder"
+  }
+}

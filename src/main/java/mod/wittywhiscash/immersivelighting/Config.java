@@ -19,6 +19,8 @@ public class Config {
 
     public static ForgeConfigSpec.IntValue TORCH_TIMEUNTILBURNOUT;
 
+    public static ForgeConfigSpec.IntValue FLINTANDTINDER_DURABILITY;
+
     public static ForgeConfigSpec.BooleanValue WORLDGEN_REPLACETORCHES;
     public static ForgeConfigSpec.BooleanValue WORLDGEN_STARTLIT;
 
@@ -29,6 +31,9 @@ public class Config {
 
         TORCH_TIMEUNTILBURNOUT = COMMON_BUILDER.comment("The time, in minutes, it takes for the torch to burn out.")
                 .defineInRange("torch_burnoutTime", 60, 1, 1440);
+
+        FLINTANDTINDER_DURABILITY = COMMON_BUILDER.comment("The durability, in uses, of the flint and tinder.")
+                .defineInRange("flintAndTinder_durability", 16, 1, 64);
 
         WORLDGEN_REPLACETORCHES = COMMON_BUILDER.comment("If set to true, the world will generate with this mod's lit torches as opposed to vanilla torches. If set to false, vanilla torches will generate.")
                 .define("worldGen_replaceTorches", true);
