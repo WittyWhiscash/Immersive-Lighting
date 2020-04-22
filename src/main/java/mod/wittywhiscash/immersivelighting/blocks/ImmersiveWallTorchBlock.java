@@ -160,11 +160,11 @@ public class ImmersiveWallTorchBlock extends WallTorchBlock {
     }
 
     public void playLightingSound(World world, BlockPos pos) {
-        world.playSound(null, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
+        world.playSound(null, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 0.9F, world.rand.nextFloat() * 0.1F + 0.9F);
     }
 
     public void playExtinguishSound(World world, BlockPos pos) {
-        world.playSound(null, pos, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
+        world.playSound(null, pos, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.9F, world.rand.nextFloat() * 0.1F + 0.9F);
     }
 
     @Override
