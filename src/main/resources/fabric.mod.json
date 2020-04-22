@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "immersivelighting",
+  "version": "${version}",
+
+  "name": "Immersive Lighting",
+  "description": "A port of Chaosyr's Realistic Torches to Fabric versions.",
+  "authors": [
+    "WittyWhiscash"
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": "https://github.com/WittyWhiscash/Immersive-Lighting"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/modid/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "mod.wittywhiscash.immersivelighting.ImmersiveLighting"
+    ],
+    "client": [
+      "mod.wittywhiscash.immersivelighting.ImmersiveLighting"
+    ]
+  },
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.15.x"
+  },
+  "suggests": {
+    "flamingo": "*"
+  },
+
+  "custom": {
+    "waila:plugins": {
+      "id": "immersivelighting",
+      "initializer": "mod.wittywhiscash.immersivelighting.compat.waila.ImmersiveLightingWailaPlugin"
+    }
+  }
+}
