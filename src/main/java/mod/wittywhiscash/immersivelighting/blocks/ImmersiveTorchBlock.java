@@ -9,6 +9,7 @@ import net.minecraft.item.Items;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
@@ -26,19 +27,19 @@ public class ImmersiveTorchBlock extends TorchBlock {
     private static int secondCounter = 60;
     private static int minuteCounter = Config.TORCH_TIMEUNTILBURNOUT.get();
     private static final IntegerProperty AGE = IntegerProperty.create("age", 0, minuteCounter);
-    private static final BooleanProperty ISLIT = BooleanProperty.create("islit");
+    private static final BooleanProperty LIT = BlockStateProperties.LIT;
 
     public ImmersiveTorchBlock() {
         super(Block.Properties.from(Blocks.TORCH));
-        this.setDefaultState(this.getDefaultState().with(ISLIT, false).with(AGE, 0));
+        this.setDefaultState(this.getDefaultState().with(LIT, false).with(AGE, 0));
     }
 
     public static IntegerProperty getAge() {
         return AGE;
     }
 
-    public static BooleanProperty getIslit() {
-        return ISLIT;
+    public static BooleanProperty getLit() {
+        return LIT;
     }
 
     public static int getMinuteCounter() {
@@ -48,7 +49,7 @@ public class ImmersiveTorchBlock extends TorchBlock {
     // Set the light value to 14 when it is lit. Otherwise, it emits no light.
     @Override
     public int getLightValue(BlockState state) {
-        if (state.get(ISLIT)) {
+        if (state.get(LIT)) {
             return 14;
         }
         else return 0;
@@ -57,7 +58,7 @@ public class ImmersiveTorchBlock extends TorchBlock {
     // Only animate the particles when the torch is lit.
     @Override
     public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
-        if (!state.get(ISLIT)) {
+        if (!state.get(LIT)) {
             return;
         }
         else {
@@ -66,7 +67,7 @@ public class ImmersiveTorchBlock extends TorchBlock {
     }
 
     @Override
-    public ActionResultType func_225533_a_(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         // Check if the block was right clicked with a flint and steel. If so, change the state to a lit torch, and damage the flint and steel.
         if (player.getHeldItem(hand).getItem() == Items.FLINT_AND_STEEL) {
             playLightingSound(world, pos);
@@ -84,7 +85,7 @@ public class ImmersiveTorchBlock extends TorchBlock {
             }
             return ActionResultType.SUCCESS;
         }
-        return super.func_225533_a_(state, world, pos, player, hand, hit);
+        return super.onBlockActivated(state, world, pos, player, hand, hit);
     }
 
     @Override
@@ -93,10 +94,10 @@ public class ImmersiveTorchBlock extends TorchBlock {
     }
 
     @Override
-    public void func_225534_a_(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+    public void tick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         if (!world.isRemote()) {
             boolean isTorchNotValid = checkTorchIsValid(state, world, pos);
-            if (!state.get(ISLIT) || isTorchNotValid) {
+            if (!state.get(LIT) || isTorchNotValid) {
                 return;
             }
             secondCounter--;
@@ -133,7 +134,7 @@ public class ImmersiveTorchBlock extends TorchBlock {
 
     public boolean checkTorchIsValid(BlockState state, World world, BlockPos pos) {
         // Check if we are raining and we are lit. If so, put out the torch.
-        if (world.isRainingAt(pos) && state.get(ISLIT)) {
+        if (world.isRainingAt(pos) && state.get(LIT)) {
             playExtinguishSound(world, pos);
             changeBlockStateToUnlit(world, pos);
             return true;
@@ -142,7 +143,7 @@ public class ImmersiveTorchBlock extends TorchBlock {
     }
 
     public void changeBlockStateToLit(World world, BlockPos pos) {
-        world.setBlockState(pos, ModBlocks.TORCH.getDefaultState().with(ISLIT, true).with(AGE, minuteCounter));
+        world.setBlockState(pos, ModBlocks.TORCH.getDefaultState().with(LIT, true).with(AGE, minuteCounter));
         world.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(world));
     }
 
@@ -162,7 +163,6 @@ public class ImmersiveTorchBlock extends TorchBlock {
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         super.fillStateContainer(builder);
-        builder.add(AGE);
-        builder.add(ISLIT);
+        builder.add(AGE, LIT);
     }
 }

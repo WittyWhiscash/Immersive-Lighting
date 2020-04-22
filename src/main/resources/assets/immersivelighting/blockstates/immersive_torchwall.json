@@ -1,12 +1,12 @@
 {
     "variants": {
-        "facing=east,islit=true": { "model": "immersivelighting:block/immersive_torchwall_lit" },
-        "facing=east,islit=false": { "model": "immersivelighting:block/immersive_torchwall_unlit"},
-        "facing=south,islit=true": { "model": "immersivelighting:block/immersive_torchwall_lit", "y": 90 },
-        "facing=south,islit=false": { "model": "immersivelighting:block/immersive_torchwall_unlit", "y": 90 },
-        "facing=west,islit=true": { "model": "immersivelighting:block/immersive_torchwall_lit", "y": 180 },
-        "facing=west,islit=false": { "model": "immersivelighting:block/immersive_torchwall_unlit", "y": 180 },
-        "facing=north,islit=true": { "model": "immersivelighting:block/immersive_torchwall_lit", "y": 270 },
-        "facing=north,islit=false": { "model": "immersivelighting:block/immersive_torchwall_unlit", "y": 270 }
+        "facing=east,lit=true": { "model": "immersivelighting:block/immersive_torchwall_lit" },
+        "facing=east,lit=false": { "model": "immersivelighting:block/immersive_torchwall_unlit"},
+        "facing=south,lit=true": { "model": "immersivelighting:block/immersive_torchwall_lit", "y": 90 },
+        "facing=south,lit=false": { "model": "immersivelighting:block/immersive_torchwall_unlit", "y": 90 },
+        "facing=west,lit=true": { "model": "immersivelighting:block/immersive_torchwall_lit", "y": 180 },
+        "facing=west,lit=false": { "model": "immersivelighting:block/immersive_torchwall_unlit", "y": 180 },
+        "facing=north,lit=true": { "model": "immersivelighting:block/immersive_torchwall_lit", "y": 270 },
+        "facing=north,lit=false": { "model": "immersivelighting:block/immersive_torchwall_unlit", "y": 270 }
     }
 }

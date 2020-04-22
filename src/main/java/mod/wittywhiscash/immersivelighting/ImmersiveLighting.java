@@ -54,11 +54,11 @@ public class ImmersiveLighting
 
     private void setup(final FMLCommonSetupEvent event)
     {
-        ForgeRegistries.BIOMES.forEach(biome -> biome.addFeature(GenerationStage.Decoration.TOP_LAYER_MODIFICATION, new TorchFeature(NoFeatureConfig::deserialize).func_225566_b_(IFeatureConfig.NO_FEATURE_CONFIG).func_227228_a_(Placement.NOPE.func_227446_a_(IPlacementConfig.NO_PLACEMENT_CONFIG))));
+        ForgeRegistries.BIOMES.forEach(biome -> biome.addFeature(GenerationStage.Decoration.TOP_LAYER_MODIFICATION, new TorchFeature(NoFeatureConfig::deserialize).withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).func_227228_a_(Placement.NOPE.func_227446_a_(IPlacementConfig.NO_PLACEMENT_CONFIG))));
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
-        RenderTypeLookup.setRenderLayer(ModBlocks.TORCH, RenderType.func_228643_e_());
-        RenderTypeLookup.setRenderLayer(ModBlocks.WALL_TORCH, RenderType.func_228643_e_());
+        RenderTypeLookup.setRenderLayer(ModBlocks.TORCH, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.WALL_TORCH, RenderType.cutout());
     }
 }
