@@ -34,11 +34,15 @@ public class ImmersiveTorchBlock extends TorchBlock {
         this.setDefaultState(this.getDefaultState().with(LIT, false).with(AGE, 0));
     }
 
-    public static IntegerProperty getAge() {
+    public static IntegerProperty getAgeProperty() {
         return AGE;
     }
 
-    public static BooleanProperty getLit() {
+    public IntegerProperty getAgeInstance() {
+        return AGE;
+    }
+
+    public static BooleanProperty getLitProperty() {
         return LIT;
     }
 
