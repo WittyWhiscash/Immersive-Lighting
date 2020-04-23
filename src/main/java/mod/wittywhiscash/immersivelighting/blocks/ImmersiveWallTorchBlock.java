@@ -12,6 +12,7 @@ import net.minecraft.item.Items;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -25,31 +26,33 @@ import java.util.Random;
 public class ImmersiveWallTorchBlock extends WallTorchBlock {
 
     private static int secondCounter = 60;
-    private static int minuteCounter = Config.TORCH_TIMEUNTILBURNOUT.get();
-    private static final IntegerProperty AGE = IntegerProperty.create("age", 0, minuteCounter);
-    private static final BooleanProperty ISLIT = BooleanProperty.create("islit");
+    private static int burnoutTime = Config.TORCH_TIMEUNTILBURNOUT.get();
+    private static final IntegerProperty AGE = IntegerProperty.create("age", 0, burnoutTime);
+    private static final BooleanProperty LIT = BlockStateProperties.LIT;
 
     protected ImmersiveWallTorchBlock() {
         super(Block.Properties.from(Blocks.WALL_TORCH));
-        this.setDefaultState(this.getDefaultState().with(ISLIT, false).with(AGE, 0));
+        this.setDefaultState(this.getDefaultState().with(LIT, false).with(AGE, 0));
     }
 
-    public static IntegerProperty getAge() {
+    public static IntegerProperty getAgeProperty() {
         return AGE;
     }
 
-    public static BooleanProperty getIslit() {
-        return ISLIT;
+    public IntegerProperty getAgeInstance() { return AGE; }
+
+    public static BooleanProperty getLitProperty() {
+        return LIT;
     }
 
-    public static int getMinuteCounter() {
-        return minuteCounter;
+    public static int getBurnoutTime() {
+        return burnoutTime;
     }
 
     // Set the light value to 14 when it is lit. Otherwise, it emits no light.
     @Override
     public int getLightValue(BlockState state) {
-        if (state.get(ISLIT)) {
+        if (state.get(LIT)) {
             return 14;
         }
         else return 0;
@@ -58,7 +61,7 @@ public class ImmersiveWallTorchBlock extends WallTorchBlock {
     // Only animate the particles when the torch is lit.
     @Override
     public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
-        if (!state.get(ISLIT)) {
+        if (!state.get(LIT)) {
             return;
         }
         else {
@@ -97,7 +100,7 @@ public class ImmersiveWallTorchBlock extends WallTorchBlock {
     public void tick(BlockState state, World world, BlockPos pos, Random random) {
         if (!world.isRemote()) {
             boolean isTorchNotValid = checkTorchIsValid(state, world, pos);
-            if (!state.get(ISLIT) || isTorchNotValid) {
+            if (!state.get(LIT) || isTorchNotValid) {
                 return;
             }
             secondCounter--;
@@ -134,7 +137,7 @@ public class ImmersiveWallTorchBlock extends WallTorchBlock {
 
     public boolean checkTorchIsValid(BlockState state, World world, BlockPos pos) {
         // Check if we are raining and we are lit. If so, put out the torch.
-        if (world.isRainingAt(pos) && state.get(ISLIT)) {
+        if (world.isRainingAt(pos) && state.get(LIT)) {
             playExtinguishSound(world, pos);
             changeBlockStateToUnlit(world, pos, state);
             return true;
@@ -143,7 +146,7 @@ public class ImmersiveWallTorchBlock extends WallTorchBlock {
     }
 
     public void changeBlockStateToLit(World world, BlockPos pos, BlockState state) {
-        world.setBlockState(pos, ModBlocks.WALL_TORCH.getDefaultState().with(ISLIT, true).with(AGE, minuteCounter).with(HORIZONTAL_FACING, state.get(HORIZONTAL_FACING)));
+        world.setBlockState(pos, ModBlocks.WALL_TORCH.getDefaultState().with(LIT, true).with(AGE, burnoutTime).with(HORIZONTAL_FACING, state.get(HORIZONTAL_FACING)));
         world.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(world));
     }
 

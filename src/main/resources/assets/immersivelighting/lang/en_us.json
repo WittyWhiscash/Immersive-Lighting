@@ -2,5 +2,8 @@
   "block.immersivelighting.immersive_torch": "Torch",
 
   "item.immersivelighting.tinder": "Tinder",
-  "item.immersivelighting.flint_and_tinder": "Flint and Tinder"
+  "item.immersivelighting.flint_and_tinder": "Flint and Tinder",
+
+  "tooltip.immersivelighting.waila_lit": "Lit",
+  "tooltip.immersivelighting.waila_time": "Time left: %s Minutes"
 }

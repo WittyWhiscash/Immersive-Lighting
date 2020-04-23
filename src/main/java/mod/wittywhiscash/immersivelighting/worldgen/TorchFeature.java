@@ -35,14 +35,14 @@ public class TorchFeature extends Feature<NoFeatureConfig> {
                         blockPos$mutableBlockPos.setPos(startX + x, y, startZ + z);
                         if (worldIn.getBlockState(blockPos$mutableBlockPos).getBlock() == Blocks.TORCH) {
                             if (Config.WORLDGEN_STARTLIT.get()) {
-                                worldIn.setBlockState(blockPos$mutableBlockPos, ModBlocks.TORCH.getDefaultState().with(ImmersiveTorchBlock.getIslit(), true).with(ImmersiveTorchBlock.getAge(), ImmersiveTorchBlock.getMinuteCounter()), 3);
+                                worldIn.setBlockState(blockPos$mutableBlockPos, ModBlocks.TORCH.getDefaultState().with(ImmersiveTorchBlock.getLitProperty(), true).with(ImmersiveTorchBlock.getAgeProperty(), ImmersiveTorchBlock.getBurnoutTime()), 3);
                                 worldIn.getPendingBlockTicks().scheduleTick(blockPos$mutableBlockPos, worldIn.getBlockState(blockPos$mutableBlockPos).getBlock(), worldIn.getBlockState(blockPos$mutableBlockPos).getBlock().tickRate(worldIn));
                             }
                             else worldIn.setBlockState(blockPos$mutableBlockPos, ModBlocks.TORCH.getDefaultState(), 3);
                         }
                         if (worldIn.getBlockState(blockPos$mutableBlockPos).getBlock() == Blocks.WALL_TORCH) {
                             if (Config.WORLDGEN_STARTLIT.get()){
-                                worldIn.setBlockState(blockPos$mutableBlockPos, ModBlocks.WALL_TORCH.getDefaultState().with(ImmersiveWallTorchBlock.getIslit(), true).with(ImmersiveWallTorchBlock.getAge(), ImmersiveWallTorchBlock.getMinuteCounter()).with(BlockStateProperties.HORIZONTAL_FACING, worldIn.getBlockState(blockPos$mutableBlockPos).get(BlockStateProperties.HORIZONTAL_FACING)), 3);
+                                worldIn.setBlockState(blockPos$mutableBlockPos, ModBlocks.WALL_TORCH.getDefaultState().with(ImmersiveWallTorchBlock.getLitProperty(), true).with(ImmersiveWallTorchBlock.getAgeProperty(), ImmersiveWallTorchBlock.getBurnoutTime()).with(BlockStateProperties.HORIZONTAL_FACING, worldIn.getBlockState(blockPos$mutableBlockPos).get(BlockStateProperties.HORIZONTAL_FACING)), 3);
                                 worldIn.getPendingBlockTicks().scheduleTick(blockPos$mutableBlockPos, worldIn.getBlockState(blockPos$mutableBlockPos).getBlock(), worldIn.getBlockState(blockPos$mutableBlockPos).getBlock().tickRate(worldIn));
                             }
                             else worldIn.setBlockState(blockPos$mutableBlockPos, ModBlocks.WALL_TORCH.getDefaultState().with(BlockStateProperties.HORIZONTAL_FACING, worldIn.getBlockState(blockPos$mutableBlockPos).get(BlockStateProperties.HORIZONTAL_FACING)), 3);
