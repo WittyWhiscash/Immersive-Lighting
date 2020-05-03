@@ -1,6 +1,0 @@
-{
-    "parent": "block/torch_wall",
-    "textures": {
-        "torch": "realistictorchesreborn:block/torch_unlit"
-    }
-}
