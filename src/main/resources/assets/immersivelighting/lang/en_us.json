@@ -5,5 +5,9 @@
   "item.immersivelighting.flint_and_tinder": "Flint and Tinder",
 
   "tooltip.immersivelighting.waila_lit": "Lit",
-  "tooltip.immersivelighting.waila_time": "Time left: %s Minutes"
+  "tooltip.immersivelighting.waila_time": "Time left: %s Minutes",
+
+  "text.autoconfig.immersivelighting.title": "Immersive Lighting Config",
+  "text.autoconfig.immersivelighting.option.durability.flint_tinder_durability": "Flint and Tinder Durability",
+  "text.autoconfig.immersivelighting.option.durability.flint_tinder_durability.@Tooltip": "How many times you can use a flint and tinder"
 }
