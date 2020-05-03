@@ -1,0 +1,42 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "name": "leaves_drops",
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.0625
+        },
+        {
+          "condition": "minecraft:inverted",
+          "term": {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "item": "minecraft:shears"
+            }
+          }
+        }
+      ],
+      "functions": [
+        {
+          "function": "minecraft:apply_bonus",
+          "enchantment": "minecraft:fortune",
+          "formula": "minecraft:binomial_with_bonus_count",
+          "parameters": {
+            "probability": 0.5714286,
+            "extra": 1
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "immersivelighting:tinder",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}
