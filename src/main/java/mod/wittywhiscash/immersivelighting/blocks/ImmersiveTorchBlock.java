@@ -72,11 +72,68 @@ public class ImmersiveTorchBlock extends TorchBlock {
         }
     }
 
+    // Check if the torch is right-clicked with a lighting item of some sort.
+    // If so, damage it and light the torch only if it isn't raining
+    // where the torch resides or if the lighting item was successful.
+    // Otherwise, do nothing.
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        // Check if the torch is right-clicked with a flint and steel. If so,
-        // damage the flint and steel and light the torch only if it isn't
-        // raining where the torch resides. Otherwise, do nothing.
+
+        // Do absolutely nothing if the torch is already lit.
+        if (state.get(LIT)) {
+            return super.onUse(state, world, pos, player, hand, hit);
+        }
+
+        // The torch is being right clicked by a player holding Flint and Tinder.
+        // Flint and Tinder is not as effective as other lighting measures, so
+        // it should have the highest maximum strike count in config.
+        if (player.getStackInHand(hand).getItem() == ImmersiveLighting.FLINT_AND_TINDER) {
+
+            // Set the current hand and prep the Flint and Tinder for animation.
+            // NEEDED FOR .addPropertyGetter() method's active hand method.
+            player.setCurrentHand(hand);
+
+            playLightingSound(world, pos);
+
+            // Light it up immediately if the player is in creative and return.
+            if (player.isCreative()) {
+                changeBlockStateToLit(world, pos);
+                return ActionResult.SUCCESS;
+            }
+
+            // Damage the Flint and Tinder, breaking it if it loses all its durability.
+            ItemStack heldStack = player.getStackInHand(hand);
+            heldStack.damage(1, player, playerEntity -> {
+                playerEntity.sendToolBreakStatus(hand);
+            });
+
+            // If the world is raining on this torch, play the extinguish sound and do nothing else.
+            if (world.hasRain(pos)) {
+                playExtinguishSound(world, pos);
+                return ActionResult.PASS;
+            }
+
+            // At a random chance, if configured, check if the random number equals zero.
+            // If so, light the torch and reset the amount of strikes for when it burns out again.
+
+            // If you are unsuccessful, increase the amount of strikes and do nothing.
+
+            // The chance should be more likely the more times you strike the torch,
+            // meaning that it should be less common to have a lot of strikes to light the torch.
+            if (world.random.nextInt(max_strikes_tinder) - current_strikes <= 0) {
+                changeBlockStateToLit(world, pos);
+                current_strikes = 0;
+                return ActionResult.SUCCESS;
+            }
+            else {
+                current_strikes++;
+                return ActionResult.CONSUME;
+            }
+
+        }
+
+        // Flint and Steel is much more reliable, so should light up the torch
+        // in one shot if the torch is away from rain. No need to employ strike counts.
         if (player.getStackInHand(hand).getItem() == Items.FLINT_AND_STEEL) {
             playLightingSound(world, pos);
             if (!player.isCreative()) {
