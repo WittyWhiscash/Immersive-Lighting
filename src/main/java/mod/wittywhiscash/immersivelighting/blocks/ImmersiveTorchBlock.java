@@ -1,5 +1,6 @@
 package mod.wittywhiscash.immersivelighting.blocks;
 
+import mod.wittywhiscash.immersivelighting.ImmersiveLighting;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -25,23 +26,31 @@ import java.util.Random;
 
 public class ImmersiveTorchBlock extends TorchBlock {
 
-    private static int secondCounter = 60;
-    private static int minuteCounter = 60;
+    private int secondCounter = 60;
+    private static int burnoutTime = ImmersiveLighting.CONFIG.lighting.torch_timeUntilBurnout;
+
+    private static int max_strikes_tinder = ImmersiveLighting.CONFIG.lighting.torch_flintTinderMaxStrikes;
+    private int current_strikes = 0;
+
     private static BooleanProperty LIT = Properties.LIT;
-    private static IntProperty AGE = IntProperty.of("age", 0, minuteCounter);
+    private static IntProperty AGE = IntProperty.of("age", 0, burnoutTime);
 
     public ImmersiveTorchBlock() {
         super(Settings.copy(Blocks.TORCH));
         setDefaultState(getDefaultState().with(LIT, false).with(AGE, 0));
     }
 
-    public int getMinuteCounter() {
-        return minuteCounter;
+    public static int getBurnoutTime() {
+        return burnoutTime;
     }
 
-    public IntProperty getAge() {
+    public static BooleanProperty getLitProperty() { return LIT; }
+
+    public IntProperty getAgeInstance() {
         return AGE;
     }
+
+    public static IntProperty getAgeProperty() { return AGE; }
 
     // Set the light value to 14 when it is lit. Otherwise, set the light value to 0.
     @Override
@@ -127,6 +136,9 @@ public class ImmersiveTorchBlock extends TorchBlock {
                 return;
             }
 
+            if (ImmersiveLighting.CONFIG.debug.showTorchUpdateDebug) {
+                ImmersiveLighting.LOGGER.info("Torch at %s is updating", pos.toShortString());
+            }
             // The age counter is not zero, but some other number. Update the blockstate with the new age,
             // and schedule the next tick as well as resetting the second counter.
             world.setBlockState(pos, this.getDefaultState().with(LIT, true).with(AGE, newAge));
@@ -154,7 +166,7 @@ public class ImmersiveTorchBlock extends TorchBlock {
     }
 
     public void changeBlockStateToLit(World world, BlockPos pos) {
-        world.setBlockState(pos, this.getDefaultState().with(LIT, true).with(AGE, minuteCounter));
+        world.setBlockState(pos, this.getDefaultState().with(LIT, true).with(AGE, burnoutTime));
         world.getBlockTickScheduler().schedule(pos, this, this.getTickRate(world));
     }
 
