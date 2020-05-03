@@ -19,9 +19,13 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "mod.wittywhiscash.immersivelighting.ImmersiveLighting"
+      "mod.wittywhiscash.immersivelighting.ImmersiveLighting",
+      "mod.wittywhiscash.immersivelighting.events.LootTableManager"
     ],
     "client": [
+      "mod.wittywhiscash.immersivelighting.ImmersiveLighting"
+    ],
+    "modmenu": [
       "mod.wittywhiscash.immersivelighting.ImmersiveLighting"
     ]
   },
