@@ -5,5 +5,5 @@
   "item.immersivelighting.flint_and_tinder": "Flint and Tinder",
 
   "tooltip.immersivelighting.waila_lit": "Lit",
-  "tooltip.immersivelighting.waila_time": "Time left: %s Minutes"
+  "tooltip.immersivelighting.waila_time": "Giving Off Light Level %s"
 }

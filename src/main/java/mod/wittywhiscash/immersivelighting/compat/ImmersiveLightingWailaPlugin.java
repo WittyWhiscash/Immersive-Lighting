@@ -27,7 +27,7 @@ public class ImmersiveLightingWailaPlugin implements IWailaPlugin {
                 }
                 else {
                     tooltip.add(new TranslationTextComponent("tooltip.immersivelighting.waila_lit").setStyle(new Style().setColor(TextFormatting.DARK_GREEN)));
-                    tooltip.add(new TranslationTextComponent("tooltip.immersivelighting.waila_time", state.get(((ImmersiveTorchBlock) block).getAgeInstance()).toString()).setStyle(new Style().setColor(TextFormatting.GOLD)));
+                    tooltip.add(new TranslationTextComponent("tooltip.immersivelighting.waila_time", ((ImmersiveTorchBlock)block).getAgeInstance(state)).setStyle(new Style().setColor(TextFormatting.GOLD)));
                 }
             }
         }, TooltipPosition.BODY, ImmersiveTorchBlock.class);
@@ -42,7 +42,7 @@ public class ImmersiveLightingWailaPlugin implements IWailaPlugin {
                 }
                 else {
                     tooltip.add(new TranslationTextComponent("tooltip.immersivelighting.waila_lit").setStyle(new Style().setColor(TextFormatting.DARK_GREEN)));
-                    tooltip.add(new TranslationTextComponent("tooltip.immersivelighting.waila_time", state.get(((ImmersiveWallTorchBlock) block).getAgeInstance()).toString()).setStyle(new Style().setColor(TextFormatting.GOLD)));
+                    tooltip.add(new TranslationTextComponent("tooltip.immersivelighting.waila_time", ((ImmersiveWallTorchBlock)block).getAgeInstance(state)).setStyle(new Style().setColor(TextFormatting.GOLD)));
                 }
             }
         }, TooltipPosition.BODY, ImmersiveWallTorchBlock.class);
