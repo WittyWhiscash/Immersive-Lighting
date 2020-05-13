@@ -1,13 +1,11 @@
 package mod.wittywhiscash.immersivelighting;
 
 import mod.wittywhiscash.immersivelighting.blocks.ModBlocks;
-import mod.wittywhiscash.immersivelighting.worldgen.TorchFeature;
+import mod.wittywhiscash.immersivelighting.world.gen.TorchFeature;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.placement.IPlacementConfig;

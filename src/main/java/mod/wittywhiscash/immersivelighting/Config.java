@@ -17,9 +17,13 @@ public class Config {
     public static ForgeConfigSpec CLIENT_CONFIG;
     public static ForgeConfigSpec COMMON_CONFIG;
 
-    public static ForgeConfigSpec.IntValue TORCH_TIMEUNTILBURNOUT;
+    public static ForgeConfigSpec.DoubleValue TORCH_CHANCETODIM;
 
     public static ForgeConfigSpec.IntValue FLINTANDTINDER_DURABILITY;
+    public static ForgeConfigSpec.IntValue FLINTANDTINDER_MAXSTRIKES;
+
+    public static ForgeConfigSpec.IntValue BOWDRILL_DURABILITY;
+    public static ForgeConfigSpec.IntValue BOWDRILL_MAXSTRIKES;
 
     public static ForgeConfigSpec.BooleanValue WORLDGEN_REPLACETORCHES;
     public static ForgeConfigSpec.BooleanValue WORLDGEN_STARTLIT;
@@ -29,11 +33,20 @@ public class Config {
     static {
         COMMON_BUILDER.comment("General Settings").push(CATEGORY_GENERAL);
 
-        TORCH_TIMEUNTILBURNOUT = COMMON_BUILDER.comment("The time, in minutes, it takes for the torch to burn out.")
-                .defineInRange("torch_burnoutTime", 60, 1, 1440);
+        TORCH_CHANCETODIM = COMMON_BUILDER.comment("The chance, every random tick, that a torch will dim and shed one less light level.")
+                .defineInRange("torch_chanceToDim", 0.25, 0.01, 1);
 
         FLINTANDTINDER_DURABILITY = COMMON_BUILDER.comment("The durability, in uses, of the flint and tinder.")
                 .defineInRange("flintAndTinder_durability", 16, 1, 64);
+
+        FLINTANDTINDER_MAXSTRIKES = COMMON_BUILDER.comment("How many times maximum it can take for a flint and tinder to light a torch.")
+                .defineInRange("flintAndTinder_maxStrikes", 8, 1, 16);
+
+        BOWDRILL_DURABILITY = COMMON_BUILDER.comment("How much durability, in uses, the bow drill has.")
+                .defineInRange("bowDrill_durability", 32, 1, 128);
+
+        BOWDRILL_MAXSTRIKES = COMMON_BUILDER.comment("How many times maximum it can take for a bow drill to light a torch.")
+                .defineInRange("bowDrill_maxStrikes", 4, 1, 8);
 
         WORLDGEN_REPLACETORCHES = COMMON_BUILDER.comment("If set to true, the world will generate with this mod's lit torches as opposed to vanilla torches. If set to false, vanilla torches will generate.")
                 .define("worldGen_replaceTorches", true);

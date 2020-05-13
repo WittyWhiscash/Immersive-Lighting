@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "immersivelighting:tinder"
+    },
+    {
+      "item": "minecraft:bow"
+    }
+  ],
+  "result": {
+    "item": "immersivelighting:bow_drill"
+  }
+}

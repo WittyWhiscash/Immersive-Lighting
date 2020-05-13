@@ -1,4 +1,4 @@
-package mod.wittywhiscash.immersivelighting.worldgen;
+package mod.wittywhiscash.immersivelighting.world.gen;
 
 import com.mojang.datafixers.Dynamic;
 import mod.wittywhiscash.immersivelighting.Config;
@@ -35,15 +35,13 @@ public class TorchFeature extends Feature<NoFeatureConfig> {
                         blockPos$mutable.setPos(startX + x, y, startZ + z);
                         if (worldIn.getBlockState(blockPos$mutable).getBlock() == Blocks.TORCH) {
                             if (Config.WORLDGEN_STARTLIT.get()) {
-                                worldIn.setBlockState(blockPos$mutable, ModBlocks.TORCH.getDefaultState().with(ImmersiveTorchBlock.getLitProperty(), true).with(ImmersiveTorchBlock.getAgeProperty(), ImmersiveTorchBlock.getMinuteCounter()), 3);
-                                worldIn.getPendingBlockTicks().scheduleTick(blockPos$mutable, worldIn.getBlockState(blockPos$mutable).getBlock(), worldIn.getBlockState(blockPos$mutable).getBlock().tickRate(worldIn));
+                                worldIn.setBlockState(blockPos$mutable, ModBlocks.TORCH.getDefaultState().with(ImmersiveTorchBlock.getLitProperty(), true).with(ImmersiveTorchBlock.getAgeProperty(), 15), 3);
                             }
                             else worldIn.setBlockState(blockPos$mutable, ModBlocks.TORCH.getDefaultState(), 3);
                         }
                         if (worldIn.getBlockState(blockPos$mutable).getBlock() == Blocks.WALL_TORCH) {
                             if (Config.WORLDGEN_STARTLIT.get()){
-                                worldIn.setBlockState(blockPos$mutable, ModBlocks.WALL_TORCH.getDefaultState().with(ImmersiveWallTorchBlock.getLitProperty(), true).with(ImmersiveWallTorchBlock.getAgeProperty(), ImmersiveWallTorchBlock.getMinuteCounter()).with(BlockStateProperties.HORIZONTAL_FACING, worldIn.getBlockState(blockPos$mutable).get(BlockStateProperties.HORIZONTAL_FACING)), 3);
-                                worldIn.getPendingBlockTicks().scheduleTick(blockPos$mutable, worldIn.getBlockState(blockPos$mutable).getBlock(), worldIn.getBlockState(blockPos$mutable).getBlock().tickRate(worldIn));
+                                worldIn.setBlockState(blockPos$mutable, ModBlocks.WALL_TORCH.getDefaultState().with(ImmersiveWallTorchBlock.getLitProperty(), true).with(ImmersiveWallTorchBlock.getAgeProperty(), 15).with(BlockStateProperties.HORIZONTAL_FACING, worldIn.getBlockState(blockPos$mutable).get(BlockStateProperties.HORIZONTAL_FACING)), 3);
                             }
                             else worldIn.setBlockState(blockPos$mutable, ModBlocks.WALL_TORCH.getDefaultState().with(BlockStateProperties.HORIZONTAL_FACING, worldIn.getBlockState(blockPos$mutable).get(BlockStateProperties.HORIZONTAL_FACING)), 3);
                         }

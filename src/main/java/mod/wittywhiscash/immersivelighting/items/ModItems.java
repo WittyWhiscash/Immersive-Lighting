@@ -20,12 +20,14 @@ public class ModItems {
     @ObjectHolder("immersive_torch") public static final Item TORCH = null;
     @ObjectHolder("flint_and_tinder") public static final Item FLINT_AND_TINDER = null;
     @ObjectHolder("tinder") public static final Item TINDER = null;
+    @ObjectHolder("bow_drill") public static final Item BOW_DRILL = null;
 
     @SubscribeEvent
     public static void registerItems(final RegistryEvent.Register<Item> itemRegistry) {
         itemRegistry.getRegistry().registerAll(
                 new WallOrFloorItem(ModBlocks.TORCH, ModBlocks.WALL_TORCH, PROPERTIES).setRegistryName(ImmersiveLighting.getId("immersive_torch")),
                 new LightingItem(Config.FLINTANDTINDER_DURABILITY.get()).setRegistryName(ImmersiveLighting.getId("flint_and_tinder")),
+                new LightingItem(Config.BOWDRILL_DURABILITY.get()).setRegistryName(ImmersiveLighting.getId("bow_drill")),
                 new Item(new Item.Properties().group(ItemGroup.MATERIALS)).setRegistryName(ImmersiveLighting.getId("tinder"))
         );
     }
