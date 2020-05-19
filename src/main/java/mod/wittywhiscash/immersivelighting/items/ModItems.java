@@ -16,6 +16,8 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ModItems {
 
     private static final Item.Properties PROPERTIES = new Item.Properties().group(ItemGroup.DECORATIONS);
+    private static final int FLINT_AND_TINDER_DURABILITY = Config.FLINTANDTINDER_DURABILITY.get();
+    private static final int BOW_DRILL_DURABILITY = Config.BOWDRILL_DURABILITY.get();
 
     @ObjectHolder("immersive_torch") public static final Item TORCH = null;
     @ObjectHolder("flint_and_tinder") public static final Item FLINT_AND_TINDER = null;
@@ -26,8 +28,8 @@ public class ModItems {
     public static void registerItems(final RegistryEvent.Register<Item> itemRegistry) {
         itemRegistry.getRegistry().registerAll(
                 new WallOrFloorItem(ModBlocks.TORCH, ModBlocks.WALL_TORCH, PROPERTIES).setRegistryName(ImmersiveLighting.getId("immersive_torch")),
-                new LightingItem(Config.FLINTANDTINDER_DURABILITY.get()).setRegistryName(ImmersiveLighting.getId("flint_and_tinder")),
-                new LightingItem(Config.BOWDRILL_DURABILITY.get()).setRegistryName(ImmersiveLighting.getId("bow_drill")),
+                new LightingItem(FLINT_AND_TINDER_DURABILITY).setRegistryName(ImmersiveLighting.getId("flint_and_tinder")),
+                new LightingItem(BOW_DRILL_DURABILITY).setRegistryName(ImmersiveLighting.getId("bow_drill")),
                 new Item(new Item.Properties().group(ItemGroup.MATERIALS)).setRegistryName(ImmersiveLighting.getId("tinder"))
         );
     }

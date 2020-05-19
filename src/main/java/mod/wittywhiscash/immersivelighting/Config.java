@@ -18,6 +18,7 @@ public class Config {
     public static ForgeConfigSpec COMMON_CONFIG;
 
     public static ForgeConfigSpec.DoubleValue TORCH_CHANCETODIM;
+    public static ForgeConfigSpec.BooleanValue TORCH_RELIGHTALLOWED;
 
     public static ForgeConfigSpec.IntValue FLINTANDTINDER_DURABILITY;
     public static ForgeConfigSpec.IntValue FLINTANDTINDER_MAXSTRIKES;
@@ -35,6 +36,9 @@ public class Config {
 
         TORCH_CHANCETODIM = COMMON_BUILDER.comment("The chance, every random tick, that a torch will dim and shed one less light level.")
                 .defineInRange("torch_chanceToDim", 0.25, 0.01, 1);
+
+        TORCH_RELIGHTALLOWED = COMMON_BUILDER.comment("If set to true, will allow the player to relight torches that are in the middle of burning. If set to false, torches must burn out before lighting again.")
+                .define("torch_relightAllowed", false);
 
         FLINTANDTINDER_DURABILITY = COMMON_BUILDER.comment("The durability, in uses, of the flint and tinder.")
                 .defineInRange("flintAndTinder_durability", 16, 1, 64);
