@@ -1,6 +1,7 @@
 package mod.wittywhiscash.immersivelighting.blocks;
 
 import mod.wittywhiscash.immersivelighting.ImmersiveLighting;
+import mod.wittywhiscash.immersivelighting.items.LightingItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -20,63 +21,53 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
-import org.lwjgl.system.CallbackI;
 
 import java.util.Random;
 
 public class ImmersiveWallTorchBlock extends WallTorchBlock {
 
-    private int secondCounter = 60;
-    private static int burnoutTime = ImmersiveLighting.CONFIG.lighting.torch_timeUntilBurnout;
+    // The variable chance to dim (in decimal format, so 25% is actually 0.25) a torch on a random tick.
+    private static final double CHANCE_TO_DIM = ImmersiveLighting.CONFIG.lighting.torch_chanceToDim;
 
-    private static int maxStrikes_tinder = ImmersiveLighting.CONFIG.lighting.torch_flintTinderMaxStrikes;
+    // Variables to track the amount of strikes the player has striked with a lighting item.
+    private final int MAX_STRIKES_TINDER = ImmersiveLighting.CONFIG.lighting.torch_flintTinderMaxStrikes;
+    private final int MAX_STRIKES_BOW_DRILL = ImmersiveLighting.CONFIG.lighting.torch_bowDrillMaxStrikes;
     private int currentStrikes = 0;
 
-    private static BooleanProperty LIT = Properties.LIT;
-    private static IntProperty AGE = IntProperty.of("age", 0, burnoutTime);
+    private static final boolean RELIGHT_ALLOWED = ImmersiveLighting.CONFIG.lighting.torch_relightAllowed;
+
+    private static final BooleanProperty LIT = Properties.LIT;
+    private static final IntProperty AGE = Properties.AGE_15;
 
     public ImmersiveWallTorchBlock() {
         super(Settings.copy(Blocks.WALL_TORCH));
         setDefaultState(getDefaultState().with(LIT, false).with(AGE, 0));
     }
 
-    public static int getBurnoutTime() {
-        return burnoutTime;
-    }
+    public static BooleanProperty getLitProperty() { return LIT; }
 
-    public IntProperty getAgeInstance() {
-        return AGE;
-    }
+    public int getAgeInstance(BlockState state) { return state.get(AGE); }
 
     public static IntProperty getAgeProperty() { return AGE; }
 
-    public static BooleanProperty getLitProperty() { return LIT; }
-
-    // Set the light value to 14 when it is lit. Otherwise, set the light value to 0.
+    // The light value equals the age of the torch. Higher age means more light shed.
     @Override
     public int getLuminance(BlockState state) {
-        if (state.get(LIT)) {
-            return 14;
-        }
-        else return 0;
+        return state.get(AGE);
     }
 
     // Only animate the particles when the torch is lit.
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        if (!state.get(LIT)) {
-            return;
-        }
-        else {
+        if (state.get(LIT)) {
             super.randomDisplayTick(state, world, pos, random);
         }
     }
 
+    // Whether the block ticks randomly.
     @Override
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
-        world.getBlockTickScheduler().schedule(pos, this, this.getTickRate(world));
-        super.onBlockAdded(state, world, pos, oldState, moved);
+    public boolean hasRandomTicks(BlockState state) {
+        return true;
     }
 
     // Check if the torch is right-clicked with a lighting item of some sort.
@@ -86,17 +77,17 @@ public class ImmersiveWallTorchBlock extends WallTorchBlock {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 
-        // Do absolutely nothing if the torch is already lit.
-        if (state.get(LIT)) {
+        // Do absolutely nothing if the torch is already lit, or if relighting is not allowed and the torch is still lit.
+        if (state.get(LIT) && state.get(AGE) == 15 || !RELIGHT_ALLOWED && state.get(LIT)) {
             return super.onUse(state, world, pos, player, hand, hit);
         }
 
-        // The torch is being right clicked by a player holding Flint and Tinder.
-        // Flint and Tinder is not as effective as other lighting measures, so
-        // it should have the highest maximum strike count in config.
-        if (player.getStackInHand(hand).getItem() == ImmersiveLighting.FLINT_AND_TINDER) {
+        // The torch is being right clicked by a player holding a lighting item.
+        // Lighting items should have varying degrees of usefulness, so configure
+        // them properly using the maximum strike count for each item in config.
+        if (player.getStackInHand(hand).getItem() instanceof LightingItem) {
 
-            // Set the current hand and prep the Flint and Tinder for animation.
+            // Set the current hand and prep the lighting item for animation.
             // NEEDED FOR .addPropertyGetter() method's active hand method.
             player.setCurrentHand(hand);
 
@@ -104,11 +95,11 @@ public class ImmersiveWallTorchBlock extends WallTorchBlock {
 
             // Light it up immediately if the player is in creative and return.
             if (player.isCreative()) {
-                changeBlockStateToLit(world, pos, state);
+                changeBlockStateToLit(state, world, pos);
                 return ActionResult.SUCCESS;
             }
 
-            // Damage the Flint and Tinder, breaking it if it loses all its durability.
+            // Damage the lighting item, breaking it if it loses all its durability.
             ItemStack heldStack = player.getStackInHand(hand);
             heldStack.damage(1, player, playerEntity -> {
                 playerEntity.sendToolBreakStatus(hand);
@@ -120,6 +111,11 @@ public class ImmersiveWallTorchBlock extends WallTorchBlock {
                 return ActionResult.PASS;
             }
 
+            if (state.get(LIT)) {
+                changeBlockStateToLit(state, world, pos);
+                return ActionResult.SUCCESS;
+            }
+
             // At a random chance, if configured, check if the random number equals zero.
             // If so, light the torch and reset the amount of strikes for when it burns out again.
 
@@ -127,16 +123,26 @@ public class ImmersiveWallTorchBlock extends WallTorchBlock {
 
             // The chance should be more likely the more times you strike the torch,
             // meaning that it should be less common to have a lot of strikes to light the torch.
-            if (world.random.nextInt(maxStrikes_tinder) - currentStrikes <= 0) {
-                changeBlockStateToLit(world, pos, state);
-                currentStrikes = 0;
-                return ActionResult.SUCCESS;
+            else if (player.getStackInHand(hand).getItem() == ImmersiveLighting.FLINT_AND_TINDER) {
+                if (world.random.nextInt(MAX_STRIKES_TINDER) - currentStrikes <= 0) {
+                    changeBlockStateToLit(state, world, pos);
+                    currentStrikes = 0;
+                    return ActionResult.SUCCESS;
+                } else {
+                    currentStrikes++;
+                    return ActionResult.CONSUME;
+                }
             }
-            else {
-                currentStrikes++;
-                return ActionResult.CONSUME;
+            else if (player.getStackInHand(hand).getItem() == ImmersiveLighting.BOW_DRILL) {
+                if (world.random.nextInt(MAX_STRIKES_BOW_DRILL) - currentStrikes <= 0) {
+                    changeBlockStateToLit(state, world, pos);
+                    currentStrikes = 0;
+                    return ActionResult.SUCCESS;
+                } else {
+                    currentStrikes++;
+                    return ActionResult.CONSUME;
+                }
             }
-
         }
 
         // Flint and Steel is much more reliable, so should light up the torch
@@ -151,63 +157,29 @@ public class ImmersiveWallTorchBlock extends WallTorchBlock {
             }
             if (world.hasRain(pos)) {
                 playExtinguishSound(world, pos);
+                return ActionResult.PASS;
             }
-            if (!world.hasRain(pos)) {
-                changeBlockStateToLit(world, pos, state);
+            if (!world.hasRain(pos) && !state.get(LIT) || RELIGHT_ALLOWED && state.get(LIT)) {
+                changeBlockStateToLit(state, world, pos);
             }
             return ActionResult.SUCCESS;
         }
         return super.onUse(state, world, pos, player, hand, hit);
     }
 
-    // Poll the block once every second.
+    // Called every so often to check we are still in a valid place to not be extinguished.
     @Override
-    public int getTickRate(WorldView worldView) {
-        return 20;
-    }
-
-    // What the torch does every time it ticks.
-    @Override
-    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (!world.isClient()) {
-            // Check if the torch is not lit or if it is lit and under rain. If so, do nothing.
-            boolean isTorchNotValid = checkTorchIsValid(state, world, pos);
-            if (!state.get(LIT) || isTorchNotValid) {
-                return;
+    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        checkTorchIsValid(state, world, pos);
+        if (!(state.get(AGE) <= 0)) {
+            if (world.random.nextDouble() <= CHANCE_TO_DIM) {
+                int newAge = state.get(AGE) - 1;
+                world.setBlockState(pos, state.with(AGE, newAge));
             }
-
-            // Decrement the second counter. If it isn't at zero, schedule another tick
-            // for the next second and do nothing else.
-            secondCounter--;
-            if (secondCounter != 0) {
-                world.getBlockTickScheduler().schedule(pos, this, this.getTickRate(world));
-                return;
-            }
-
-            // We've hit zero seconds on the clock. Do some sanity checking to make sure
-            // we don't hit any sort of negative age integer.
-            int newAge = state.get(AGE) - 1;
-            if (newAge <= 0) {
-                newAge = 0;
-            }
-
-            // Our minute counter has changed to zero. Time to put it out and let the blocks beside
-            // it know we've been put out to update their lighting.
-            if (newAge == 0) {
-                playExtinguishSound(world, pos);
-                changeBlockStateToUnlit(world, pos, state);
-                world.updateNeighbors(pos, this);
-                return;
-            }
-
-            if (ImmersiveLighting.CONFIG.debug.showTorchUpdateDebug) {
-                ImmersiveLighting.LOGGER.info("Torch at %s is updating", pos.toShortString());
-            }
-            // The age counter is not zero, but some other number. Update the blockstate with the new age,
-            // and schedule the next tick as well as resetting the second counter.
-            world.setBlockState(pos, this.getDefaultState().with(LIT, true).with(AGE, newAge).with(FACING, state.get(FACING)));
-            world.getBlockTickScheduler().schedule(pos, this, this.getTickRate(world));
-            secondCounter = 60;
+        }
+        if (state.get(AGE) == 0 && state.get(LIT)) {
+            playExtinguishSound(world, pos);
+            changeBlockStateToUnlit(state, world, pos);
         }
     }
 
@@ -219,24 +191,23 @@ public class ImmersiveWallTorchBlock extends WallTorchBlock {
         super.onBlockRemoved(state, world, pos, newState, moved);
     }
 
+    // Check if we are raining and we are lit. If so, put out the torch.
     public boolean checkTorchIsValid(BlockState state, World world, BlockPos pos) {
-        // Check if we are raining and we are lit. If so, put out the torch.
         if (world.hasRain(pos) && state.get(LIT)) {
             playExtinguishSound(world, pos);
-            changeBlockStateToUnlit(world, pos, state);
+            changeBlockStateToUnlit(state, world, pos);
             return true;
         }
         else return false;
     }
 
-    public void changeBlockStateToLit(World world, BlockPos pos, BlockState state) {
-        world.setBlockState(pos, this.getDefaultState().with(LIT, true).with(AGE, burnoutTime).with(FACING, state.get(FACING)));
-        world.getBlockTickScheduler().schedule(pos, this, this.getTickRate(world));
+    // Only called when the torch is lit, so schedule the proper time to burn out with it.
+    public void changeBlockStateToLit(BlockState state, World world, BlockPos pos) {
+        world.setBlockState(pos, this.getDefaultState().with(LIT, true).with(AGE, 15).with(FACING, state.get(FACING)));;
     }
 
-    public void changeBlockStateToUnlit(World world, BlockPos pos, BlockState state) {
+    public void changeBlockStateToUnlit(BlockState state, World world, BlockPos pos) {
         world.setBlockState(pos, this.getDefaultState().with(FACING, state.get(FACING)));
-        world.getBlockTickScheduler().schedule(pos, this, this.getTickRate(world));
     }
 
     public void playLightingSound(World world, BlockPos pos) {
@@ -250,7 +221,6 @@ public class ImmersiveWallTorchBlock extends WallTorchBlock {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(LIT);
-        builder.add(AGE);
+        builder.add(LIT, AGE);
     }
 }

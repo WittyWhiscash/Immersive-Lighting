@@ -23,32 +23,31 @@ public class TorchFeature extends Feature<DefaultFeatureConfig> {
         super(configDeserializer);
     }
 
+    private static final boolean REPLACE_TORCHES = ImmersiveLighting.CONFIG.worldgen.replaceTorchesOnGen;
+    private static final boolean START_LIT = ImmersiveLighting.CONFIG.worldgen.startLitOnGen;
+
     @Override
     public boolean generate(IWorld world, ChunkGenerator<? extends ChunkGeneratorConfig> generator, Random random, BlockPos pos, DefaultFeatureConfig config) {
         BlockPos.Mutable blockPos$mutable = new BlockPos.Mutable();
         int startX = pos.getX();
         int startZ = pos.getZ();
-        if (ImmersiveLighting.CONFIG.worldgen.replaceTorchesOnGen) {
+        if (REPLACE_TORCHES) {
             for (int x = 0; x < 16; x++) {
                 for (int y = 0; y < world.getHeight(); y++) {
                     for (int z = 0; z < 16; z++) {
                         blockPos$mutable.set(startX + x, y, startZ + z);
                         if (world.getBlockState(blockPos$mutable).getBlock() == Blocks.TORCH) {
-                            if (ImmersiveLighting.CONFIG.worldgen.startLitOnGen) {
-                                world.setBlockState(blockPos$mutable, ImmersiveLighting.TORCH_BLOCK.getDefaultState().with(ImmersiveTorchBlock.getLitProperty(), true).with(ImmersiveTorchBlock.getAgeProperty(), ImmersiveTorchBlock.getBurnoutTime()), 3);
-                                world.getBlockTickScheduler().schedule(blockPos$mutable, world.getBlockState(blockPos$mutable).getBlock(), world.getBlockState(blockPos$mutable).getBlock().getTickRate(world));
-                            }
-                            else {
+                            if (START_LIT) {
+                                world.setBlockState(blockPos$mutable, ImmersiveLighting.TORCH_BLOCK.getDefaultState().with(ImmersiveTorchBlock.getLitProperty(), true).with(ImmersiveTorchBlock.getAgeProperty(), 15), 3);
+                            } else {
                                 world.setBlockState(blockPos$mutable, ImmersiveLighting.TORCH_BLOCK.getDefaultState(), 3);
                             }
                         }
                         if (world.getBlockState(blockPos$mutable).getBlock() == Blocks.WALL_TORCH) {
-                            if (ImmersiveLighting.CONFIG.worldgen.startLitOnGen) {
-                                world.setBlockState(blockPos$mutable, ImmersiveLighting.WALL_TORCH_BLOCK.getDefaultState().with(ImmersiveWallTorchBlock.getLitProperty(), true).with(ImmersiveWallTorchBlock.getAgeProperty(), ImmersiveWallTorchBlock.getBurnoutTime()).with(ImmersiveWallTorchBlock.FACING, world.getBlockState(blockPos$mutable).get(WallTorchBlock.FACING)), 3);
-                                world.getBlockTickScheduler().schedule(blockPos$mutable, world.getBlockState(blockPos$mutable).getBlock(), world.getBlockState(blockPos$mutable).getBlock().getTickRate(world));
-                            }
-                            else {
-                                world.setBlockState(blockPos$mutable, ImmersiveLighting.WALL_TORCH_BLOCK.getDefaultState().with(WallTorchBlock.FACING, world.getBlockState(blockPos$mutable).get(WallTorchBlock.FACING)), 3);
+                            if (START_LIT) {
+                                world.setBlockState(blockPos$mutable, ImmersiveLighting.WALL_TORCH_BLOCK.getDefaultState().with(ImmersiveWallTorchBlock.getLitProperty(), true).with(ImmersiveWallTorchBlock.getAgeProperty(), 15).with(ImmersiveWallTorchBlock.FACING, world.getBlockState(blockPos$mutable).get(WallTorchBlock.FACING)), 3);
+                            } else {
+                                world.setBlockState(blockPos$mutable, ImmersiveLighting.WALL_TORCH_BLOCK.getDefaultState().with(ImmersiveWallTorchBlock.FACING, world.getBlockState(blockPos$mutable).get(WallTorchBlock.FACING)), 3);
                             }
                         }
                     }

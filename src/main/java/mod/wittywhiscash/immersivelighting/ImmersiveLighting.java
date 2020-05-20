@@ -53,6 +53,7 @@ public class ImmersiveLighting implements ModInitializer, ClientModInitializer, 
 
 	public static final Item TINDER = new Item(new Item.Settings().group(ItemGroup.MATERIALS));
 	public static final Item FLINT_AND_TINDER = new LightingItem(CONFIG.durability.flint_tinder_durability);
+	public static final Item BOW_DRILL = new LightingItem(CONFIG.durability.bowDrill_durability);
 
 	@Override
 	public void onInitialize() {
@@ -60,6 +61,7 @@ public class ImmersiveLighting implements ModInitializer, ClientModInitializer, 
 		Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "immersivetorch_wall"), WALL_TORCH_BLOCK);
 		Registry.register(Registry.ITEM, new Identifier(MOD_ID, "immersivetorch"), TORCH_ITEM);
 		Registry.register(Registry.ITEM, new Identifier(MOD_ID, "flint_and_tinder"), FLINT_AND_TINDER);
+		Registry.register(Registry.ITEM, new Identifier(MOD_ID, "bow_drill"), BOW_DRILL);
 		Registry.register(Registry.ITEM, new Identifier(MOD_ID, "tinder"), TINDER);
 		if (CONFIG.debug.showRegistrationDebug) {
 			LOGGER.info("Registered blocks/items for %s", MOD_ID);

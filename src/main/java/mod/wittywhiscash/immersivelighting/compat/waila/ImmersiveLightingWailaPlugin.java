@@ -5,6 +5,7 @@ import mod.wittywhiscash.immersivelighting.blocks.ImmersiveTorchBlock;
 import mod.wittywhiscash.immersivelighting.blocks.ImmersiveWallTorchBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.BaseText;
 import net.minecraft.text.Style;
@@ -29,7 +30,7 @@ public class ImmersiveLightingWailaPlugin implements IWailaPlugin {
                 }
                 else {
                     tooltip.add(new TranslatableText("tooltip.immersivelighting.waila_lit").setStyle(new Style().setColor(Formatting.DARK_GREEN)));
-                    tooltip.add(new TranslatableText("tooltip.immersivelighting.waila_time", state.get(((ImmersiveTorchBlock) block).getAgeInstance()).toString()).setStyle(new Style().setColor(Formatting.GOLD)));
+                    tooltip.add(new TranslatableText("tooltip.immersivelighting.waila_time", ((ImmersiveTorchBlock)block).getAgeInstance(state)).setStyle(new Style().setColor(Formatting.GOLD)));
                 }
 
             }
@@ -45,7 +46,7 @@ public class ImmersiveLightingWailaPlugin implements IWailaPlugin {
                 }
                 else {
                     tooltip.add(new TranslatableText("tooltip.immersivelighting.waila_lit").setStyle(new Style().setColor(Formatting.DARK_GREEN)));
-                    tooltip.add(new TranslatableText("tooltip.immersivelighting.waila_time", state.get(((ImmersiveWallTorchBlock) block).getAgeInstance()).toString()).setStyle(new Style().setColor(Formatting.GOLD)));
+                    tooltip.add(new TranslatableText("tooltip.immersivelighting.waila_time", ((ImmersiveWallTorchBlock)block).getAgeInstance(state)).setStyle(new Style().setColor(Formatting.GOLD)));
                 }
             }
         }, TooltipPosition.BODY, ImmersiveWallTorchBlock.class);

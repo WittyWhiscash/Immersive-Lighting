@@ -1,0 +1,14 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "immersivelighting:item/bow_drill"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "immersivelighting:lighting": 1
+            },
+            "model": "immersivelighting:item/bow_drill_lighting"
+        }
+    ]
+}

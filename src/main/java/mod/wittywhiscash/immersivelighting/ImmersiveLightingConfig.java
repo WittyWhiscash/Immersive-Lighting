@@ -31,14 +31,19 @@ public class ImmersiveLightingConfig extends PartitioningSerializer.GlobalData {
     @Config(name = "durability_module")
     public static class DurabilityModule implements ConfigData {
 
-        @ConfigEntry.BoundedDiscrete(min = 1, max = 64)
         @Comment("How much durability the flint and tinder item has. Min: 1, Max: 64, Default: 16")
         public int flint_tinder_durability = 16;
+
+        @Comment("How much durability the bow drill item has. Min: 1, Max: 128, Default: 32")
+        public int bowDrill_durability = 32;
 
         @Override
         public void validatePostLoad() throws ValidationException {
             if (flint_tinder_durability <= 0 || flint_tinder_durability > 64) {
                flint_tinder_durability = MathHelper.clamp(flint_tinder_durability, 1, 64);
+            }
+            if (bowDrill_durability <= 0 || bowDrill_durability > 128) {
+                bowDrill_durability = MathHelper.clamp(bowDrill_durability, 1, 128);
             }
         }
     }
@@ -46,19 +51,28 @@ public class ImmersiveLightingConfig extends PartitioningSerializer.GlobalData {
     @Config(name = "lighting_module")
     public static class LightingModule implements ConfigData {
 
-        @Comment("How much time it takes, in minutes, for a torch to burn out. Min: 1, Max: 1440 (24 hours), Default: 60")
-        public int torch_timeUntilBurnout = 60;
+        @Comment("The chance, every random tick, that a torch will dim and shed one less light level. Min: 0.01, Max: 1, Default: 0.25")
+        public double torch_chanceToDim = 0.25;
+
+        @Comment("If set to true, will allow the player to relight torches that are in the middle of burning. If set to false, torches must burn out before lighting again.")
+        public boolean torch_relightAllowed = false;
 
         @Comment("How many times maximum it can take for a flint and tinder to light a torch. Min: 1, Max: 16, Default: 8")
         public int torch_flintTinderMaxStrikes = 8;
 
+        @Comment("How many times maximum it can take for the bow drill to light a torch. Min: 1, Max: 8, Default: 4")
+        public int torch_bowDrillMaxStrikes = 4;
+
         @Override
         public void validatePostLoad() throws ValidationException {
-            if (torch_timeUntilBurnout <= 0 || torch_timeUntilBurnout > 1440) {
-                torch_timeUntilBurnout = MathHelper.clamp(torch_timeUntilBurnout, 1, 1440);
+            if (torch_chanceToDim <= 0 || torch_chanceToDim > 1.0) {
+                torch_chanceToDim = MathHelper.clamp(torch_chanceToDim, 0.01, 1.0);
             }
             if (torch_flintTinderMaxStrikes <= 0 || torch_flintTinderMaxStrikes > 16) {
                 torch_flintTinderMaxStrikes = MathHelper.clamp(torch_flintTinderMaxStrikes, 1, 16);
+            }
+            if (torch_bowDrillMaxStrikes <= 0 || torch_bowDrillMaxStrikes > 8) {
+                torch_bowDrillMaxStrikes = MathHelper.clamp(torch_bowDrillMaxStrikes, 1, 8);
             }
         }
 
@@ -72,9 +86,6 @@ public class ImmersiveLightingConfig extends PartitioningSerializer.GlobalData {
 
         @Comment("Whether loot table injection debug messages should be shown.")
         public boolean showLootTableDebug = false;
-
-        @Comment("Whether torch update debug messages should be shown. Can cause log spam if a lot of torches are in the area.")
-        public boolean showTorchUpdateDebug = false;
     }
 
     @Config(name = "worldgen_module")
