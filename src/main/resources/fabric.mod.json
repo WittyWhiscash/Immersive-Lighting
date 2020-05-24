@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Immersive Lighting",
-  "description": "A port of Chaosyr's Realistic Torches to Fabric versions.",
+  "description": "Torches that no longer stay permanently lit!",
   "authors": [
     "WittyWhiscash"
   ],
