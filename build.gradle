@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '2.0.0'
+version = '2.0.1'
 group = 'mod.wittywhiscash.immersivelighting' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'immersivelighting-1.15'
 
@@ -81,7 +81,7 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/')
+            args '--mod', 'immersivelighting', '--all', '--output', file('src/generated/resources/')
 
             mods {
                 examplemod {
