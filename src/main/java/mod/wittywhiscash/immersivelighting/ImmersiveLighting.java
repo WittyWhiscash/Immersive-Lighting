@@ -1,6 +1,5 @@
 package mod.wittywhiscash.immersivelighting;
 
-import io.github.prospector.modmenu.api.ModMenuApi;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
 import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer;
@@ -11,25 +10,14 @@ import mod.wittywhiscash.immersivelighting.worldgen.TorchFeature;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
-import net.fabricmc.fabric.api.loot.v1.FabricLootSupplier;
-import net.fabricmc.fabric.api.loot.v1.FabricLootSupplierBuilder;
-import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
 import net.minecraft.block.Block;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.WallStandingBlockItem;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.entry.LootEntry;
-import net.minecraft.loot.entry.LootTableEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.DefaultBiomeFeatures;
 import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.decorator.ConfiguredDecorator;
 import net.minecraft.world.gen.decorator.Decorator;
 import net.minecraft.world.gen.decorator.NopeDecoratorConfig;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
@@ -38,10 +26,7 @@ import net.minecraft.world.gen.feature.FeatureConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Optional;
-import java.util.function.Supplier;
-
-public class ImmersiveLighting implements ModInitializer, ClientModInitializer, ModMenuApi {
+public class ImmersiveLighting implements ModInitializer, ClientModInitializer {
 
 	public static final String MOD_ID = "immersivelighting";
 	public static final ImmersiveLightingConfig CONFIG = AutoConfig.register(ImmersiveLightingConfig.class, PartitioningSerializer.wrap(JanksonConfigSerializer::new)).getConfig();
@@ -77,15 +62,5 @@ public class ImmersiveLighting implements ModInitializer, ClientModInitializer, 
 	public void onInitializeClient() {
 		BlockRenderLayerMap.INSTANCE.putBlock(TORCH_BLOCK, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(WALL_TORCH_BLOCK, RenderLayer.getCutout());
-	}
-
-	@Override
-	public String getModId() {
-		return ImmersiveLighting.MOD_ID;
-	}
-
-	@Override
-	public Optional<Supplier<Screen>> getConfigScreen(Screen screen) {
-		return Optional.of(AutoConfig.getConfigScreen(ImmersiveLightingConfig.class, screen));
 	}
 }
